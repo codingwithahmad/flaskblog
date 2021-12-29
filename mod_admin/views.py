@@ -16,5 +16,17 @@ def login():
 			abort(400)
 		user = User.query.filter(User.email.ilike(f'{form.email.data}')).first()
 		if not user:
-			return "Incorrect Credentials", 400			
+			return "Incorrect Credentials", 400
+
+		if not user.check_password(form.password.data):
+			return "Incorrect Credentials", 400
+
+		session['email'] = user.email
+		session['user_id'] = user.id
+
+		return "Logged in successfully."
+
+	if session.get('email') is not None:
+		return "You are already logged in"
+
 	return render_template("admin/login.html", form=form)
