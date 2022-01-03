@@ -5,6 +5,8 @@ from . import admin
 
 @admin.route('/')
 def index():
+	if session.get('user_id') is None:
+		abort(401)
 	return "Hello from admin Index"
 
 
