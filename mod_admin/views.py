@@ -16,10 +16,10 @@ def login():
 			abort(400)
 		user = User.query.filter(User.email.ilike(f'{form.email.data}')).first()
 		if not user:
-			flash("Incorrect Credentials")
+			flash("Incorrect Credentials", category="error")
 			return render_template("admin/login.html", form=form)
 		if not user.check_password(form.password.data):
-			flash("Incorrect Credentials")
+			flash("Incorrect Credentials", category="error")
 			return render_template("admin/login.html", form=form)
 
 		session['email'] = user.email
