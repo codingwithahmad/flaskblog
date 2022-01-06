@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+	<h1>Register</h1>
+	<form action="{{ url_for('users.register') }}" method="POST">
+		Full Name: {{ form.full_name }}<br />
+		Email: {{ form.email }}<br />
+		Password: {{ form.password }}<br />
+		Confirm Password: {{ form.password_confirm }}<br /> 
+		<input type="submit" value="Register">
+	</form>
+{% endblock %}
