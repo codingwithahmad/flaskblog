@@ -9,8 +9,17 @@ def register():
 	if request.method == 'POST':
 		if not form.validate_on_submit():
 			return render_template('users/register.html', form=form)
-		else:
-			pass
-			
+		if not form.password.data == form.password_confirm.data:
+			error_message = "Password and Confirm Password dosn't match"
+			form.password.errors.append(error_message)
+			form.password_confirm.errors.append(error_message)
+
+			return render_template('users/register.html', form=form)
+
+		new_user = User()
+		new_user.full_name = form.full_name.data
+		new_user.email = form.email.data
+		new_user.set_password(form.password.data)
+						
 
 	return render_template('users/register.html', form=form)
