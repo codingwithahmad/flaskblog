@@ -1,6 +1,13 @@
-from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy import Column, Integer, String, Text, Table, Foreign_key
 
 from app import db
+
+
+posts_categories = Table('posts_categories', db.metadata,
+	Column('post_id', Integer, Foreign_key('posts.id')),
+	Column('category_id', Integer, Foreign_key('categories.id'))
+)
+
 
 
 class Category(db.Model):
