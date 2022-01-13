@@ -1,11 +1,10 @@
-from sqlalchemy import Column, Integer, String, Text, Table, Foreign_key
-
+from sqlalchemy import Column, Integer, String, Text, Table, ForeignKey
 from app import db
 
 
 posts_categories = Table('posts_categories', db.metadata,
-	Column('post_id', Integer, Foreign_key('posts.id')),
-	Column('category_id', Integer, Foreign_key('categories.id'))
+	Column('post_id', Integer, ForeignKey('posts.id', ondelete='cascade')),
+	Column('category_id', Integer, ForeignKey('categories.id', ondelete='cascade'))
 )
 
 
