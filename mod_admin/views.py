@@ -8,7 +8,7 @@ from .utils import admin_only
 @admin.route('/')
 @admin_only
 def index():
-	return "Hello from admin Index"
+	return render_template('admin/index.html')
 
 
 @admin.route('/login', methods=['GET', 'POST'])
