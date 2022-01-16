@@ -1,6 +1,9 @@
 from flask import session, abort
+from functools import wraps
+
 
 def admin_only(func):
+	@wraps(func)
 	def decorator(*args, **kwargs):
 		if session.get('user_id') is None:
 			abort(401)
