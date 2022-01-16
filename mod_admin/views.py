@@ -1,4 +1,4 @@
-from flask import session, render_template, request, abort, flash
+from flask import session, render_template, request, abort, flash, redirect, url_for
 from mod_users.forms import LoginForm
 from mod_users.models import User
 from . import admin
@@ -38,3 +38,11 @@ def login():
 		return "You are already logged in"
 
 	return render_template("admin/login.html", form=form)
+
+
+@admin.route('/logout/', methods=['GET'])
+@admin_only
+def logout():
+	session.clear()
+	flash('You logged out successfully', 'success')
+	return redirect(url_for('admin.login'))
