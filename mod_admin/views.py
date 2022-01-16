@@ -35,7 +35,7 @@ def login():
 		return "Logged in successfully."
 
 	if session.get('role') == 1:
-		return "You are already logged in"
+		return redirect(url_for('admin.index'))
 
 	return render_template("admin/login.html", form=form)
 
