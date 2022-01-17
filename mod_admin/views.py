@@ -32,7 +32,7 @@ def login():
 		session['user_id'] = user.id
 		session['role'] = user.role
 
-		return "Logged in successfully."
+		return redirect(url_for('admin.index'))
 
 	if session.get('role') == 1:
 		return redirect(url_for('admin.index'))
