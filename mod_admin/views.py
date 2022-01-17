@@ -3,7 +3,7 @@ from mod_users.forms import LoginForm
 from mod_users.models import User
 from . import admin
 from .utils import admin_only
-
+from mod_blog.forms import CreatePostForm
 
 @admin.route('/')
 @admin_only
@@ -46,3 +46,11 @@ def logout():
 	session.clear()
 	flash('You logged out successfully', 'success')
 	return redirect(url_for('admin.login'))
+
+@admin.route('/posts/new/', methods=['GET', 'POST'])
+@admin_only
+def create_post():
+	form = CreatePostForm(request.form)
+	if request.method == 'POST':
+		pass
+	return render_template('admin/create_post.html', form=form)
