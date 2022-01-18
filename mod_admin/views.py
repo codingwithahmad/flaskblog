@@ -1,9 +1,16 @@
-from flask import session, render_template, request, abort, flash, redirect, url_for
+from flask import (abort, flash, redirect, render_template, request, session,
+                   url_for)
+from sqlalchemy.exc import IntegrityError
+
+from app import db
+from mod_blog.forms import CreatePostForm
+from mod_blog.models import Post
 from mod_users.forms import LoginForm
 from mod_users.models import User
+
 from . import admin
 from .utils import admin_only
-from mod_blog.forms import CreatePostForm
+
 
 @admin.route('/')
 @admin_only
@@ -52,5 +59,23 @@ def logout():
 def create_post():
 	form = CreatePostForm(request.form)
 	if request.method == 'POST':
-		pass
+		if not form.validate_on_submit():
+			return "1"
+
+
+		new_post = Post()
+
+		new_post.title = form.title.data
+		new_post.content = form.content.data
+		new_post.summery = form.summery.data
+		new_post.slug = form.slug.data
+
+		try:
+			db.session.add(new_post)
+			db.session.commit()
+			flash('Post created', 'success')
+			return redirect(url_for('admin.index'))
+		except IntegrityError:
+			db.session.rollback()
+
 	return render_template('admin/create_post.html', form=form)
