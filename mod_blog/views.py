@@ -12,5 +12,5 @@ def index():
 
 @blog.route('/<string:slug>')
 def single_post(slug):
-	post = Post.query.filter(Post.slug==slug).first()
+	post = Post.query.filter(Post.slug==slug).first_or_404()
 	return post.title
