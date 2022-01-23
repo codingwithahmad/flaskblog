@@ -54,6 +54,14 @@ def logout():
 	flash('You logged out successfully', 'success')
 	return redirect(url_for('admin.login'))
 
+@admin.route('/users/', methods=['GET'])
+@admin_only
+def list_users():
+	users = User.query.all()
+
+	return render_template('admin/list_users.html', users=users)
+
+
 @admin.route('/posts/new/', methods=['GET', 'POST'])
 @admin_only
 def create_post():
