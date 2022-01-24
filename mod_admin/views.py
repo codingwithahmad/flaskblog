@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from app import db
 from mod_blog.forms import CreatePostForm
 from mod_blog.models import Post
-from mod_users.forms import LoginForm
+from mod_users.forms import LoginForm, RegisterForm
 from mod_users.models import User
 
 from . import admin
@@ -57,10 +57,44 @@ def logout():
 @admin.route('/users/', methods=['GET'])
 @admin_only
 def list_users():
-	users = User.query.all()
+	users = User.query.order_by(User.id.desc()).all()
 
 	return render_template('admin/list_users.html', users=users)
 
+
+@admin.route('/users/new/', methods=['GET'])
+@admin_only
+def get_create_user():
+	form = RegisterForm()
+	return render_template('admin/create_user.html', form=form)
+
+@admin.route('/users/new/', methods=['POST'])
+@admin_only
+def post_create_user():
+	form = RegisterForm(request.form)
+	if not form.validate_on_submit():
+			return render_template('admin/create_user.html', form=form)
+	if not form.password.data == form.password_confirm.data:
+		error_message = "Password and Confirm Password dosn't match"
+		form.password.errors.append(error_message)
+		form.password_confirm.errors.append(error_message)
+
+		return render_template('admin/create_user.html', form=form)
+
+
+	new_user = User()
+	new_user.full_name = form.full_name.data
+	new_user.email = form.email.data
+	new_user.set_password(form.password.data)
+	try:
+		db.session.add(new_user)
+		db.session.commit()
+		flash(f'User {new_user.username} create successfully', 'success')
+	except IntegrityError:
+		db.session.rollback()
+		form.email.errors.append('This email is registered, please use another email')
+	
+	return render_template('admin/create_user.html', form=form)
 
 @admin.route('/posts/new/', methods=['GET', 'POST'])
 @admin_only
