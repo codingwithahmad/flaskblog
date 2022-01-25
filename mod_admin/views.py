@@ -121,3 +121,19 @@ def create_post():
 			db.session.rollback()
 
 	return render_template('admin/create_post.html', form=form)
+
+
+@admin.route('/posts/', methods=['GET'])
+@admin_only
+def list_posts():
+	posts = Post.query.order_by(Post.id.desc()).all()
+	return render_template('admin/list_posts.html', posts=posts)
+
+@admin.route('/posts/delete/<int:post_id>/', methods=['GET'])
+@admin_only
+def delete_post(post_id):
+	post = Post.query.get_or_404(post_id)
+	db.session.delete(post)
+	db.session.commit()
+	flash(f"{post.title} delete successfully")
+	return redirect(url_for('admin.list_posts'))
