@@ -3,7 +3,7 @@ from flask import (abort, flash, redirect, render_template, request, session,
 from sqlalchemy.exc import IntegrityError
 
 from app import db
-from mod_blog.forms import CreatePostForm
+from mod_blog.forms import CreatePostForm, ModifyPostForm
 from mod_blog.models import Post
 from mod_users.forms import LoginForm, RegisterForm
 from mod_users.models import User
@@ -119,6 +119,8 @@ def create_post():
 			return redirect(url_for('admin.index'))
 		except IntegrityError:
 			db.session.rollback()
+			flash('Slug Duplicated')
+			
 
 	return render_template('admin/create_post.html', form=form)
 
@@ -137,3 +139,27 @@ def delete_post(post_id):
 	db.session.commit()
 	flash(f"{post.title} delete successfully")
 	return redirect(url_for('admin.list_posts'))
+
+@admin.route('/posts/modify/<int:post_id>/', methods=['GET', 'POST'])
+@admin_only
+def modify_post(post_id):
+	post = Post.query.get_or_404(post_id)
+	form = ModifyPostForm(obj=post)
+	if request.method == 'POST':
+		if not form.validate_on_submit():
+			return render_template('admin/modify_post.html', data={'form': form, 'post': post })
+		
+		post.title = form.title.data
+		post.content = form.content.data
+		post.summery = form.summery.data
+		post.slug = form.slug.data
+
+		try:
+			db.session.commit()
+			flash(f'{post.title} is modified!')
+		except IntegrityError:
+			db.session.rollback()
+			flash('Slug Duplicated')
+		
+
+	return render_template('admin/modify_post.html', data={'form': form, 'post': post })

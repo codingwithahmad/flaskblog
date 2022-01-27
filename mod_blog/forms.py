@@ -8,3 +8,10 @@ class CreatePostForm(FlaskForm):
 	summery = TextAreaField()
 	content = TextAreaField(validators=[DataRequired()])
 	slug = StringField(validators=[DataRequired()])
+
+
+class ModifyPostForm(FlaskForm):
+	title = StringField(validators=[DataRequired()])
+	summery = TextAreaField()
+	content = TextAreaField(validators=[DataRequired()])
+	slug = StringField(validators=[DataRequired()])
