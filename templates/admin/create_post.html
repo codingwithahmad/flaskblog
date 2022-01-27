@@ -6,6 +6,19 @@
 <h1>Create a new post</h1>
 <form action="{{ url_for('admin.create_post')}}" method="POST">
 	{{ form.hidden_tag() }}
+	{% with messages = get_flashed_messages(True) %}
+			{% if messages %}
+			<div class="row">
+				{% for message in messages %}
+						<div class="card {{ message[0] }}">
+							<div class="section">
+								<p>{{ message[1] }}</p>
+							</div>
+						</div>
+				{% endfor %}
+			</div>
+			{% endif %}
+	{% endwith %}
 	Title: {{ form.title }}<br>
 	Slug: {{ form.slug }}<br>
 	Summery: {{ form.summery }}<br>
