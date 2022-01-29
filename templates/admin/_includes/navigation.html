@@ -1,13 +1,5 @@
-<div>
-	<ul>
-		<li>
-			<a href="{{url_for('admin.index')}}">Dashboard</a> 
-		</li>
-		<li>
-			<a href="{{url_for('admin.logout')}}">Logout</a> 
-		</li>
-		<li>
-			<a href="{{url_for('admin.create_post')}}">Add new post</a> 
-		</li>
-	</ul>
-</div>
+<header>
+	<a class="button" href="{{url_for('admin.index')}}">Dashboard</a> 
+	<a class="button" href="{{url_for('admin.logout')}}">Logout</a> 
+	<a class="button" href="{{url_for('admin.create_post')}}">Add new post</a> 
+</header>
