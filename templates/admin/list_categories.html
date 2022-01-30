@@ -1,0 +1,33 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}
+	Category list - Admin Dashboard
+{% endblock %}
+
+
+{% block page_content %}
+		<table>
+			<caption>Category</caption>
+			<thead>
+				<tr>
+				  <th>ID</th>
+				  <th>Name</th>
+				  <th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for cat in categories %}
+				<tr>
+				  <td data-label="ID">{{ cat.id}}</td>
+				  <td data-label="Name">
+					  <a href="{{ '#' or url_for('blog.single_cat', slug=cat.slug) }}">
+					  	{{ cat.name }}
+					  </a>
+				  </td>
+				  <td data-label="Actions">
+				  </td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+{% endblock %}

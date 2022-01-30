@@ -3,8 +3,8 @@ from flask import (abort, flash, redirect, render_template, request, session,
 from sqlalchemy.exc import IntegrityError
 
 from app import db
-from mod_blog.forms import CreatePostForm, ModifyPostForm
-from mod_blog.models import Post
+from mod_blog.forms import CreatePostForm, ModifyPostForm, CategoryForm
+from mod_blog.models import Post, Category
 from mod_users.forms import LoginForm, RegisterForm
 from mod_users.models import User
 
@@ -163,3 +163,38 @@ def modify_post(post_id):
 		
 
 	return render_template('admin/modify_post.html', data={'form': form, 'post': post })
+
+
+@admin.route('/categories/new/', methods=['GET', 'POST'])
+@admin_only
+def create_category():
+	form = CategoryForm(request.form)
+	if request.method == 'POST':
+		if not form.validate_on_submit():
+			return "1"
+
+
+		new_category = Category()
+
+		new_category.name = form.name.data
+		new_category.desc = form.desc.data
+		new_category.slug = form.slug.data
+
+		try:
+			db.session.add(new_category)
+			db.session.commit()
+			flash('Category created', 'success')
+			return redirect(url_for('admin.index'))
+		except IntegrityError:
+			db.session.rollback()
+			flash('Slug Duplicated')
+			
+
+	return render_template('admin/create_category.html', form=form)
+
+
+@admin.route('/categories/', methods=['GET'])
+@admin_only
+def list_categories():
+	categories = Category.query.order_by(Category.id.desc()).all()
+	return render_template('admin/list_categories.html', categories=categories)
