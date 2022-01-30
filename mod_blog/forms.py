@@ -15,3 +15,9 @@ class ModifyPostForm(FlaskForm):
 	summery = TextAreaField()
 	content = TextAreaField(validators=[DataRequired()])
 	slug = StringField(validators=[DataRequired()])
+
+
+class CategoryForm(FlaskForm):
+	name = StringField(validators=[DataRequired()])
+	slug = StringField(validators=[DataRequired()])
+	desc = TextAreaField()
