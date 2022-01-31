@@ -1,0 +1,27 @@
+{% extends 'admin/base.html' %}
+
+{% block title %}Modify {{ data.category.name }}{% endblock %}
+
+{% block page_content %}
+<h1>{{ data.category.name }}</h1>
+<form action="{{ url_for('admin.modify_category', category_id=data.category.id)}}" method="POST">
+	{{ data.form.hidden_tag() }}
+	{% with messages = get_flashed_messages(True) %}
+			{% if messages %}
+			<div class="row">
+				{% for message in messages %}
+						<div class="card {{ message[0] }}">
+							<div class="section">
+								<p>{{ message[1] }}</p>
+							</div>
+						</div>
+				{% endfor %}
+			</div>
+			{% endif %}
+	{% endwith %}
+	Title: {{ data.form.name }}<br>
+	Slug: {{ data.form.slug }}<br>
+	Summery: {{ data.form.desc }}<br>
+	<input type="submit" value="Save"> 
+</form>
+{% endblock %}

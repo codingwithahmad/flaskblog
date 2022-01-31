@@ -198,3 +198,38 @@ def create_category():
 def list_categories():
 	categories = Category.query.order_by(Category.id.desc()).all()
 	return render_template('admin/list_categories.html', categories=categories)
+
+
+
+@admin.route('/categories/delete/<int:category_id>/', methods=['GET'])
+@admin_only
+def delete_category(category_id):
+	category = Category.query.get_or_404(category_id)
+	db.session.delete(category)
+	db.session.commit()
+	flash(f"{category.name} delete successfully")
+	return redirect(url_for('admin.list_categories'))
+
+
+@admin.route('/categories/modify/<int:category_id>/', methods=['GET', 'POST'])
+@admin_only
+def modify_category(category_id):
+	category = Category.query.get_or_404(category_id)
+	form = CategoryForm(obj=category)
+	if request.method == 'POST':
+		if not form.validate_on_submit():
+			return render_template('admin/modify_category.html', data={'form': form, 'category': category })
+		
+		category.name = form.name.data
+		category.desc = form.desc.data
+		category.slug = form.slug.data
+
+		try:
+			db.session.commit()
+			flash(f'{category.name} is modified!')
+		except IntegrityError:
+			db.session.rollback()
+			flash('Slug Duplicated')
+		
+
+	return render_template('admin/modify_category.html', data={'form': form, 'category': category })
