@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField
+from wtforms import StringField, TextAreaField, SelectMultipleField
 from wtforms.validators import DataRequired
+from utils.forms import MultipleCheckBoxField
 
 
 class PostForm(FlaskForm):
@@ -8,9 +9,7 @@ class PostForm(FlaskForm):
 	summery = TextAreaField()
 	content = TextAreaField(validators=[DataRequired()])
 	slug = StringField(validators=[DataRequired()])
-
-
-
+	categories = MultipleCheckBoxField()
 
 
 class CategoryForm(FlaskForm):
