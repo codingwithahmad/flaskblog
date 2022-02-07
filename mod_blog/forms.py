@@ -9,7 +9,7 @@ class PostForm(FlaskForm):
 	summery = TextAreaField()
 	content = TextAreaField(validators=[DataRequired()])
 	slug = StringField(validators=[DataRequired()])
-	categories = MultipleCheckBoxField()
+	categories = MultipleCheckBoxField(coerce=int)
 
 
 class CategoryForm(FlaskForm):
