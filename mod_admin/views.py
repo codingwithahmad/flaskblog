@@ -105,15 +105,16 @@ def create_post():
     form.categories.choices = [(category.id, category.name) for category in categories]
     if request.method == 'POST':
         if not form.validate_on_submit():
-            return "1"
+            return "Form validation error"
 
-
+        print(form.categories.data)
         new_post = Post()
 
         new_post.title = form.title.data
         new_post.content = form.content.data
         new_post.summery = form.summery.data
         new_post.slug = form.slug.data
+        new_post.categories = [Category.query.get(category_id) for category_id in form.categories.data]
 
         try:
             db.session.add(new_post)
@@ -148,6 +149,10 @@ def delete_post(post_id):
 def modify_post(post_id):
     post = Post.query.get_or_404(post_id)
     form = PostForm(obj=post)
+    categories = Category.query.order_by(Category.id.asc()).all()
+    form.categories.choices = [(category.id, category.name) for category in categories]
+    if not request.method == 'POST':
+        form.categories.data = [category.id for category in post.categories]
     if request.method == 'POST':
         if not form.validate_on_submit():
             return render_template('admin/modify_post.html', data={'form': form, 'post': post })
@@ -156,6 +161,7 @@ def modify_post(post_id):
         post.content = form.content.data
         post.summery = form.summery.data
         post.slug = form.slug.data
+        post.categories = [Category.query.get(category_id) for category_id in form.categories.data]
 
         try:
             db.session.commit()
