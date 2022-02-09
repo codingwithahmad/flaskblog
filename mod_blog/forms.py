@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SelectMultipleField
+from wtforms import StringField, TextAreaField
 from wtforms.validators import DataRequired
 from utils.forms import MultipleCheckBoxField
 
@@ -16,3 +16,6 @@ class CategoryForm(FlaskForm):
 	name = StringField(validators=[DataRequired()])
 	slug = StringField(validators=[DataRequired()])
 	desc = TextAreaField()
+
+class SearchForm(FlaskForm):
+    search_query = StringField(validators=[DataRequired()])
