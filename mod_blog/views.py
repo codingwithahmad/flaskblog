@@ -35,12 +35,12 @@ def search_blog():
                                          summery_cond,
                                          content_cond)).all()
     print(found_posts)
-    return render_template('blog/search.html', posts=found_posts, search_form=search_form)
+    return render_template('blog/search.html', posts=found_posts, search_form=search_form, search_query=search_query)
 
 
 @blog.route('/category/<string:slug>')
 def single_category(slug):
     search_form = SearchForm()
     category = Category.query.filter(Category.slug == slug).first_or_404()
-    return render_template('blog/search.html', posts=category.posts, search_form=search_form)
+    return render_template('blog/single_category.html', posts=category.posts, search_form=search_form, category_name=category.name)
 
