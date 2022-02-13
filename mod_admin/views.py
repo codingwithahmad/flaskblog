@@ -8,6 +8,7 @@ from mod_blog.forms import PostForm, CategoryForm
 from mod_blog.models import Post, Category
 from mod_users.forms import LoginForm, RegisterForm
 from mod_users.models import User
+from mod_upload.forms import FileUploadForm
 
 from . import admin
 from .utils import admin_only
@@ -242,3 +243,14 @@ def modify_category(category_id):
 
 
     return render_template('admin/modify_category.html', data={'form': form, 'category': category })
+
+
+
+@admin.route('/library/upload', methods=["GET", "POST"])
+@admin_only
+def upload_file():
+    form = FileUploadForm()
+    if request.method == "POST":
+        pass
+
+    return render_template('admin/upload_file.html', form=form)
