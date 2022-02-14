@@ -8,11 +8,13 @@ from mod_blog.forms import PostForm, CategoryForm
 from mod_blog.models import Post, Category
 from mod_users.forms import LoginForm, RegisterForm
 from mod_users.models import User
+from mod_upload.models import File
 from mod_upload.forms import FileUploadForm
 
 from . import admin
 from .utils import admin_only
-
+from werkzeug.utils import secure_filename
+import uuid
 
 @admin.route('/')
 @admin_only
@@ -251,6 +253,19 @@ def modify_category(category_id):
 def upload_file():
     form = FileUploadForm()
     if request.method == "POST":
-        pass
-
+        if not form.validate_on_submit():
+            return "1";
+        filename = f'{uuid.uuid1()}_{secure_filename(form.file.data.filename)}'
+        new_file = File()
+        new_file.filename = filename
+        try:
+            db.session.add(new_file)
+            db.session.commit()
+            form.file.data.save(f'static/uploads/{filename}')
+            flash('File Uploaded')
+        except Exception as e:
+            db.session.rollback()
+            print(e)
+            flash('Error, Please try again')
     return render_template('admin/upload_file.html', form=form)
+
