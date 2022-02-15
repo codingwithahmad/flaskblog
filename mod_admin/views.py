@@ -262,7 +262,7 @@ def upload_file():
             db.session.add(new_file)
             db.session.commit()
             form.file.data.save(f'static/uploads/{filename}')
-            flash('File Uploaded')
+            flash(f"File Uploaded on {url_for('static', filename='uploads/' + filename, _external=True)}")
         except Exception as e:
             db.session.rollback()
             print(e)
