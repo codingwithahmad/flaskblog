@@ -1,3 +1,4 @@
+from redis import Redis
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -10,6 +11,7 @@ app.config.from_object(Development)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 mail = Mail(app)
+redis = Redis.from_url(app.config['REDIS_SERVER_URL'])
 
 from views import index
 
