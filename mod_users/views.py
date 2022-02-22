@@ -3,10 +3,11 @@ from sqlalchemy.exc import IntegrityError
 
 
 from . import users
-from .utils import add_to_redis, send_signup_message
+from .utils import add_to_redis, send_signup_message, get_from_redis, delete_from_redis
 from .forms import RegisterForm
 from app import db
 from .models import User
+
 
 @users.route('/register/', methods=['GET', 'POST'])
 def register():
@@ -20,7 +21,6 @@ def register():
             form.password_confirm.errors.append(error_message)
 
             return render_template('users/register.html', form=form)
-
 
         new_user = User()
         new_user.full_name = form.full_name.data
@@ -37,5 +37,34 @@ def register():
             form.email.errors.append('This email is registered, please use another email')
             return render_template('users/register.html', form=form)
 
-
     return render_template('users/register.html', form=form)
+
+
+@users.route('/confirm/')
+def confirm_registration():
+    email = request.args.get('email')
+    token = request.args.get('token')
+
+    user = User.query.filter(User.email.ilike(email)).first()
+    if not user:
+        return "User not Found"
+
+    if user.active:
+        return "User already activated"
+
+    token_from_redis = get_from_redis(user, 'register')
+
+    if not token_from_redis:
+        return "Wrong/Expired Token!"
+
+    if token != token_from_redis.decode('UTF-8'):
+        return "Wrong/Expired Token!"
+
+
+    user.active = True
+    db.session.commit()
+    delete_from_redis(user, 'register')
+
+
+    print(email, token)
+    return "1"
