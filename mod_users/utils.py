@@ -8,6 +8,14 @@ def add_to_redis(user, mode):
     redis.set(name=name, value=token, ex=14400)
     return token
 
+def get_from_redis(user, mode):
+    name = f'{user.id}_{mode.lower()}'
+    return redis.get(name=name)
+
+def delete_from_redis(user, mode):
+    name = f'{user.id}_{mode.lower()}'
+    redis.delete(name)
+
 
 def send_signup_message(user, token):
     sender = '3eraji@gmail.com'
