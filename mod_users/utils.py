@@ -1,4 +1,5 @@
 import random
+from flask import url_for
 from app import redis, mail
 
 
@@ -21,5 +22,7 @@ def send_signup_message(user, token):
     sender = '3eraji@gmail.com'
     recipients = [user.email]
     subject = "Flask Blog - Registration Confirm"
-    body = f'Hello, <br /> Here is your token: {token}'
+    email = user.email
+    url = url_for("users.confirm_registration", email=email, token=token, _external=True)
+    body = f'Hello, <br /> Click here to activate you account: {url}'
     mail.send_message(sender=sender, recipients=recipients, subject=subject, html=body)
