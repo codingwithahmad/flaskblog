@@ -6,8 +6,9 @@ from .models import Post, Category
 
 @blog.route('/')
 def index():
+    page = request.args.get('p', 1, int)
     search_form = SearchForm()
-    posts = Post.query.all()
+    posts = Post.query.paginate(page, 1).items or []
     return render_template('blog/index.html', posts=posts, search_form=search_form)
 
 
