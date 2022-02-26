@@ -8,7 +8,7 @@ from .models import Post, Category
 def index():
     page = request.args.get('p', 1, int)
     search_form = SearchForm()
-    posts = Post.query.paginate(page, 1).items or []
+    posts = Post.query.paginate(page, 1)
     return render_template('blog/index.html', posts=posts, search_form=search_form)
 
 
